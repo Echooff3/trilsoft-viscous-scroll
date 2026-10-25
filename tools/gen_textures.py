@@ -68,11 +68,10 @@ plaster = smooth(fbm(H, W, 6, 3, 0.7, seed=11), 0.66, 0.70)            # torn pl
 img = lay(img, '#6f675c', 0.30 * plaster * (0.6 + 0.4 * n2))
 img = lay(img, '#4a4f33', 0.7 * speckle(H, W, 0.004, smooth(n2, .55, .8), (1, 2.5), 4))  # lichen
 img = lay(img, '#9a8b55', 0.5 * speckle(H, W, 0.0015, smooth(n1, .6, .85), (0.8, 2), 5))
-img = composite(img, strokes(H, W, 900, (205, 196, 178), (10, 45), (30, 500), (1, 1), 0.06, 6))  # scrapes
-img = composite(img, strokes(H, W, 300, (0, 0, 0), (40, 110), (20, 260), (1, 2), 0.1, 7))
+img = composite(img, strokes(H, W, 220, (0, 0, 0), (25, 70), (20, 260), (1, 2), 0.1, 7))
 img *= (0.88 + 0.24 * fbm(H, W, 3, 2, seed=12))[..., None]
-img += (rng.random((H, W, 1)) - 0.5) * 14
-save(img, 'dark.jpg')
+img += (rng.random((H, W, 1)) - 0.5) * 4
+save(img, 'dark.jpg', 90)
 
 # 2. plaster wall (shop)
 n1, n2, n4 = fbm(H, W, 7, 3, seed=21), fbm(H, W, 6, 6, seed=22), fbm(H, W, 6, 2, seed=23)
@@ -100,11 +99,7 @@ img *= (0.93 + 0.12 * n3)[..., None]
 img += (rng.random((H, W, 1)) - 0.5) * 10
 save(img, 'paper.jpg')
 
-# 4. transparent scratch overlay
-H2, W2 = 900, 1600
-sc = strokes(H2, W2, 260, (222, 212, 192), (30, 120), (40, 700), (1, 2), 0.05, 41)
-sc.alpha_composite(strokes(H2, W2, 160, (12, 10, 8), (60, 160), (20, 400), (1, 2), 0.07, 42))
-sc.save(OUT + 'scratches.png')
+# 4. (scratch overlay removed: it put white hairlines over the hero)
 
 # 5. torn collage strips (alpha), rust & plaster
 def torn(w, h, c1, c2, seed):
@@ -130,7 +125,7 @@ for i, (name, c1, c2) in enumerate(plates):
     img = lay(img, c1, 0.85 * smooth(n1, 0.25, 0.75))
     img = lay(img, '#d6ccb8', 0.18 * np.exp(-((n2 - 0.6) / 0.02) ** 2))
     img = lay(img, '#0e0b09', 0.4 * smooth(n2, 0.7, 0.95))
-    img = composite(img, strokes(h, w, 120, (215, 205, 185), (10, 50), (20, 300), (1, 1), 0.08, 80 + i))
+    img = composite(img, strokes(h, w, 120, (14, 11, 9), (10, 50), (20, 300), (1, 1), 0.08, 80 + i))
     im = Image.fromarray(np.clip(img, 0, 255).astype(np.uint8)); d = ImageDraw.Draw(im, 'RGBA')
     L = (226, 216, 196, 200); cx, cy = w / 2, h / 2
     if name == 'harbor':
@@ -158,7 +153,7 @@ print('ok')
 def tear(w, h, c1, c2, seed, name):
     n = fbm(h, w, 6, 4, seed=seed)
     base = lay(np.zeros((h, w, 3), np.float32) + col(c1), c2, 0.6 * smooth(n, .35, .85))
-    base = composite(base, strokes(h, w, 160, (205, 196, 178), (8, 40), (30, 400), (1, 1), 0.05, seed + 1))
+    base = composite(base, strokes(h, w, 120, (0, 0, 0), (8, 40), (30, 400), (1, 1), 0.05, seed + 1))
     base += (np.random.default_rng(seed).random((h, w, 1)) - .5) * 14
     e1 = fbm(1, w, 7, 6, 0.6, seed=seed + 2)[0]; e2 = np.random.default_rng(seed + 3).random(w) * 0.08
     edge = (0.25 + 0.55 * e1 + e2) * h          # ragged top edge height per column
