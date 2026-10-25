@@ -7,8 +7,8 @@
 (() => {
   'use strict';
   const MAXC = 96;
-  const DEFAULTS = { damp: 0.16, k: 0.045, cols: 24, couple: 0.18, desync: 0.55, blend: 0.55,
-                     grad: 0.6, maxlag: 420, shear: 0.35, misprint: 0.5, grain: 0.55 };
+  const DEFAULTS = { damp: 0.16, k: 0.045, cols: 24, couple: 0.18, desync: 0.55, blend: 0.6,
+                     grad: 0.6, maxlag: 420, shear: 0.3, misprint: 0.45, grain: 0.6 };
   const P = Object.assign({}, DEFAULTS);
   const $ = (id) => document.getElementById(id);
   const body = document.body, page = $('page'), cv = $('fx'), statusEl = $('status');
@@ -56,7 +56,7 @@
   uniform sampler2DArray uTex;
   uniform vec2 uRes; uniform float uScroll, uPageH, uChunk, uLayers, uCols, uBlend, uGrad, uShear, uMis, uGrain, uTime;
   uniform float uOff[${MAXC}];
-  const vec3 PAPER = vec3(0.902,0.847,0.733);
+  const vec3 PAPER = vec3(0.082,0.067,0.055);
   float lagAt(float x, out float seam){
     float c = x / uRes.x * uCols - 0.5; float i0 = floor(c); float f = c - i0;
     int a = int(clamp(i0, 0.0, uCols-1.0)); int b = int(clamp(i0+1.0, 0.0, uCols-1.0));
@@ -66,7 +66,7 @@
     return mix(uOff[a], uOff[b], t);
   }
   vec3 samplePage(float x, float y){
-    if (y < 0.0 || y > uPageH || x < 0.0 || x > uRes.x) return PAPER * 0.96;
+    if (y < 0.0 || y > uPageH || x < 0.0 || x > uRes.x) return PAPER;
     float layer = min(floor(y / uChunk), uLayers - 1.0);
     return texture(uTex, vec3(x / uRes.x, (y - layer*uChunk) / uChunk, layer)).rgb;
   }
@@ -82,17 +82,28 @@
     float sx = px.x + dl * uShear * 0.35 * sin(yN * 3.14159);
     float pageY = uScroll + px.y + L;
     vec3 col = samplePage(sx, pageY);
-    // ink misprint: a second, offset pass printed in sepia like a misregistered plate
-    vec3 ghost = samplePage(sx + uMis*1.5, pageY - L*0.10*uMis - uMis*1.5);
-    vec3 sep = ghost * vec3(1.0, 0.9, 0.78) + vec3(0.04, 0.02, 0.0);
-    col = mix(col, min(col, sep), 0.55 * uMis * clamp(abs(L)/40.0 + 0.12, 0.0, 1.0));
-    col *= 1.0 - seam;                                  // paper-strip edge shadow
-    // weathered film: grain, vignette, faint scratches
+    // ink misprint: an offset second plate. Light ink ghosts in rust on dark ground, dark ink ghosts in sepia on paper.
+    vec3 ghost = samplePage(sx + uMis*2.0, pageY - L*0.10*uMis - uMis*2.0);
+    float mw = 0.6 * uMis * clamp(abs(L)/40.0 + 0.15, 0.0, 1.0);
+    vec3 rustG = ghost * vec3(0.78, 0.40, 0.27);
+    vec3 sepG = ghost * vec3(0.92, 0.82, 0.70);
+    col = mix(col, max(col, rustG), mw);
+    col = mix(col, min(col, sepG), mw * 0.8);
+    col *= 1.0 - seam;                                  // torn-strip edge shadow
+    // weathered print: grain, dust, scratches, flicker, heavy vignette
+    float lum = dot(col, vec3(0.299, 0.587, 0.114));
     float g = hash(floor(px) + fract(uTime*7.0)*91.0) - 0.5;
-    col += g * 0.07 * uGrain;
-    vec2 q = vUv - 0.5; col *= 1.0 - uGrain * 0.35 * dot(q,q);
-    float sxp = hash(vec2(floor(uTime*6.0), 3.0));
-    if (sxp > 0.7) { float lx = hash(vec2(floor(uTime*6.0), 9.0)) * uRes.x; col *= 1.0 - uGrain*0.18*exp(-abs(px.x-lx)); }
+    col += g * (0.05 + 0.06 * (1.0 - lum)) * uGrain;
+    float dust = step(0.9993, hash(floor(px / 2.0) + floor(uTime*10.0)*13.7));
+    col = mix(col, vec3(0.84, 0.8, 0.72), dust * 0.5 * uGrain);
+    float fr = floor(uTime*8.0);
+    if (hash(vec2(fr, 3.0)) > 0.55) { float lx = hash(vec2(fr, 9.0)) * uRes.x;
+      float sl = exp(-abs(px.x - lx) * 1.2) * smoothstep(0.0, 0.3, hash(vec2(floor(px.y/40.0), fr)));
+      col = mix(col, vec3(0.8, 0.76, 0.68), sl * 0.22 * uGrain); }
+    if (hash(vec2(fr, 5.0)) > 0.75) { float lx2 = hash(vec2(fr, 11.0)) * uRes.x; col *= 1.0 - 0.25 * uGrain * exp(-abs(px.x - lx2)); }
+    col *= 1.0 + (hash(vec2(fr, 1.0)) - 0.5) * 0.035 * uGrain;
+    vec2 q = vUv - 0.5; col *= 1.0 - uGrain * 0.75 * dot(q, q) * 1.6;
+    col = mix(col, col * vec3(1.02, 0.98, 0.92), 0.5 * uGrain);   // sepia cast
     outColor = vec4(col, 1.0);
   }`;
   function sh(type, src) { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s);
@@ -117,7 +128,7 @@
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       // keep canvas area under ~16M px (iOS limit) and height under browser canvas limit
       const scale = Math.max(0.5, Math.min(dpr, Math.sqrt(16e6 / (w * h)), 30000 / h, MAXTEX / w));
-      const c = await html2canvas(page, { scale, backgroundColor: '#e6d8bb', logging: false, useCORS: true,
+      const c = await html2canvas(page, { scale, backgroundColor: '#15110e', logging: false, useCORS: true,
         windowWidth: w, windowHeight: window.innerHeight, scrollX: 0, scrollY: -window.scrollY,
         ignoreElements: (el) => el.id === 'panel' || el.id === 'fx' });
       const chunkPx = Math.min(MAXTEX, 4096), layers = Math.ceil(c.height / chunkPx);
@@ -127,7 +138,7 @@
       const tmp = document.createElement('canvas'); tmp.width = c.width; tmp.height = chunkPx;
       const tctx = tmp.getContext('2d');
       for (let L = 0; L < layers; L++) {
-        tctx.fillStyle = '#e6d8bb'; tctx.fillRect(0, 0, tmp.width, chunkPx);
+        tctx.fillStyle = '#15110e'; tctx.fillRect(0, 0, tmp.width, chunkPx);
         tctx.drawImage(c, 0, L * chunkPx, c.width, chunkPx, 0, 0, c.width, chunkPx);
         gl.texSubImage3D(gl.TEXTURE_2D_ARRAY, 0, 0, 0, L, c.width, chunkPx, 1, gl.RGBA, gl.UNSIGNED_BYTE, tmp);
       }
