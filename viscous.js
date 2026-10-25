@@ -7,8 +7,8 @@
 (() => {
   'use strict';
   const MAXC = 96;
-  const DEFAULTS = { damp: 0.16, k: 0.045, cols: 24, couple: 0.18, desync: 0.55, blend: 0.6,
-                     grad: 0.6, maxlag: 420, shear: 0.3, misprint: 0.45, grain: 0.6 };
+  const DEFAULTS = { damp: 0.42, k: 0.045, cols: 32, couple: 0.18, desync: 1.0, blend: 0.84,
+                     grad: 0.6, maxlag: 420, shear: 0.84, misprint: 1.0, grain: 0.55 };
   const P = Object.assign({}, DEFAULTS);
   const $ = (id) => document.getElementById(id);
   const body = document.body, page = $('page'), cv = $('fx'), statusEl = $('status');

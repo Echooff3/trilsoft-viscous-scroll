@@ -153,3 +153,22 @@ for i, (name, c1, c2) in enumerate(plates):
     a = np.asarray(im, np.float32); a += (rng.random((h, w, 1)) - .5) * 12
     save(a, f'plate-{name}.jpg')
 print('ok')
+
+# 7. torn edges for section seams: ragged edge of dark scraped stock, and of plaster
+def tear(w, h, c1, c2, seed, name):
+    n = fbm(h, w, 6, 4, seed=seed)
+    base = lay(np.zeros((h, w, 3), np.float32) + col(c1), c2, 0.6 * smooth(n, .35, .85))
+    base = composite(base, strokes(h, w, 160, (205, 196, 178), (8, 40), (30, 400), (1, 1), 0.05, seed + 1))
+    base += (np.random.default_rng(seed).random((h, w, 1)) - .5) * 14
+    e1 = fbm(1, w, 7, 6, 0.6, seed=seed + 2)[0]; e2 = np.random.default_rng(seed + 3).random(w) * 0.08
+    edge = (0.25 + 0.55 * e1 + e2) * h          # ragged top edge height per column
+    yy = np.arange(h)[:, None]
+    m = (yy > edge[None, :]).astype(np.float32)
+    fiber = (yy > edge[None, :] - 3) & (yy <= edge[None, :])   # thin lighter paper fibre at the tear
+    base[fiber] = base[fiber] * 0.4 + col('#a59d8c') * 0.6
+    m = np.maximum(m, fiber * 0.8)
+    a = Image.fromarray((m * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(0.6))
+    out = Image.fromarray(np.clip(base, 0, 255).astype(np.uint8)).convert('RGBA'); out.putalpha(a); out.save(OUT + name)
+tear(2000, 110, '#15110e', '#2a221b', 91, 'tear-dark.png')
+tear(2000, 90, '#b9b1a2', '#8f877a', 92, 'tear-plaster.png')
+print('tears ok')
