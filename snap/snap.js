@@ -3,7 +3,7 @@
  * end, a controlled overshoot, a wobble or two, then an exact snap. Plain DOM: no WebGL, no snapshots. */
 (() => {
   'use strict';
-  const DEFAULTS = { k: 0.08, damp: 0.24, friction: 0.30, fstart: 0.55, overshoot: 1.5, stagger: 4 };
+  const DEFAULTS = { k: 0.035, damp: 0.37, friction: 0.30, fstart: 0.32, overshoot: 2.35, stagger: 9 };   // John's iPhone tuning
   const P = Object.assign({}, DEFAULTS);
   const $ = (s, el = document) => el.querySelector(s), $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
   const deck = $('#deck'), sections = $$('.scene', deck), N = sections.length, dots = $$('#dots button');
@@ -12,7 +12,7 @@
   const dpr = () => window.devicePixelRatio || 1;
 
   // ---------- state ----------
-  let p = 0, v = 0, target = 0, start = 0, crossed = true, settled = true, dragging = false;
+  let p = 0, v = 0, target = 0, start = 0, crossed = true, settled = true, dragging = false, landed = true, jiggled = true;
   let H = deck.clientHeight;
   const trace = [];
   let pauseWhen = null, paused = false;
@@ -27,20 +27,22 @@
 
   // arrival speed of a plain one-screen move with the current settings; longer jumps are capped to it (+15%)
   // so the bounce looks the same whether you travel 1 screen or 5
-  let capKey = '', capVal = 0.03;
+  const CAP_FALLBACK = 0.03;
+  let capKey = '', capVal = CAP_FALLBACK;
   function crossCap() {
     const key = P.k + '|' + P.damp + '|' + P.friction + '|' + P.fstart; if (key === capKey) return capVal;
-    let x = -1, vv = 0;
-    for (let n = 0; n < 600; n++) { const prog = 1 - Math.abs(x); let e = 0; if (prog > P.fstart) { const s = Math.min(1, (prog - P.fstart) / Math.max(1e-6, 1 - P.fstart)); e = P.friction * s * s * (3 - 2 * s); }
-      const vn = vv + (-P.k * x - (P.damp + e) * vv), xn = x + vn; if (xn >= 0) { capVal = Math.max(0.004, vn * 1.15); break; } x = xn; vv = vn; }
-    capKey = key; return capVal;
+    let x = -1, vv = 0, val = CAP_FALLBACK;
+    for (let n = 0; n < 900; n++) { const prog = 1 - Math.abs(x); let e = 0; if (prog > P.fstart) { const s = Math.min(1, (prog - P.fstart) / Math.max(1e-6, 1 - P.fstart)); e = P.friction * s * s * (3 - 2 * s); }
+      const vn = vv + (-P.k * x - (P.damp + e) * vv), xn = x + vn; if (xn >= 0) { val = Math.max(0.004, vn * 1.15); break; } x = xn; vv = vn; }
+    // overdamped settings never cross on their own; then only a carried swipe can cross, and it gets the fallback cap
+    capKey = key; capVal = val; return capVal;
   }
 
   function go(i, opts = {}) {
     i = Math.max(0, Math.min(N - 1, i));
     if (i === target && !opts.force && !dragging) return;
     const dir = Math.sign(i - p) || 1;
-    target = i; start = p; crossed = false; settled = false;
+    target = i; start = p; crossed = false; settled = false; landed = false; jiggled = false;
     if (reduced) { p = target; v = 0; finish(); return; }
     // stagger-in springs for the arriving section
     kids[i].forEach((c) => { c.y = 70 * dir; c.vy = 0; c.delay = c.i * P.stagger; c.active = true; c.el.style.opacity = '0'; });
@@ -74,10 +76,12 @@
       const pn = p + vn;
       let vv = vn;
       if (!crossed && (pn - target) * (p - target) <= 0) {          // arrival: controlled overshoot + jiggle the cut-outs
-        crossed = true; vv = Math.sign(vn) * Math.min(Math.abs(vn), crossCap()) * P.overshoot;   // same bounce whether we came 1 screen or 5 kickJiggle(target, Math.min(1, Math.abs(vn) * 8));
+        crossed = true; jiggled = true; vv = Math.sign(vn) * Math.min(Math.abs(vn), crossCap()) * P.overshoot; /* same bounce whether we came 1 screen or 5 */ kickJiggle(target, Math.max(0.6, Math.min(1, Math.abs(vn) * 8)));
       }
       p = pn; v = vv;
-      if (crossed && Math.abs(p - target) * H < 0.25 && Math.abs(v) * H < 0.25) {
+      if (!landed && Math.abs(p - target) < 0.03) { landed = true; if (!jiggled) kickJiggle(target, 0.6); }
+      // rest: within a quarter pixel and nearly still, crossed or not (overdamped settings glide in without crossing)
+      if (Math.abs(p - target) * H < 0.25 && Math.abs(v) * H < 0.25) {
         const busy = kids[target].some((c) => c.active) || jigs[target].some((j) => j.active);
         if (!busy) { finish(); return; }
         p = target; v = 0;
@@ -97,7 +101,7 @@
     }));
     if (settled && !dragging) return;
     // if everything inside the target finished while the deck was already parked, finish cleanly
-    if (!dragging && crossed && p === target && v === 0 && !kids[target].some((c) => c.active) && !jigs[target].some((j) => j.active)) finish();
+    if (!dragging && p === target && v === 0 && !kids[target].some((c) => c.active) && !jigs[target].some((j) => j.active)) finish();
   }
 
   // ---------- render ----------
@@ -202,7 +206,15 @@
   window.addEventListener('hashchange', () => go(indexFromHash()));
   deck.addEventListener('focusin', (e) => { const s = e.target.closest('.scene'); if (s) go(sections.indexOf(s)); });
   document.getElementById('viewport').addEventListener('scroll', (e) => { e.target.scrollTop = 0; e.target.scrollLeft = 0; });
-  window.addEventListener('resize', () => { H = deck.clientHeight; render(); });
+  // lay content out against the *visible* height (Safari's toolbars cover part of 100lvh); sections stay 100lvh
+  function setVis() {
+    const vv = window.visualViewport; let h = window.innerHeight;
+    if (vv && vv.scale < 1.01) h = Math.min(h, vv.height);
+    document.documentElement.style.setProperty('--vis', Math.round(h) + 'px');
+  }
+  setVis();
+  window.addEventListener('resize', () => { setVis(); H = deck.clientHeight; render(); });
+  if (window.visualViewport) window.visualViewport.addEventListener('resize', setVis);
 
   // ---------- tuning panel ----------
   const fmt = (id, x) => id === 'fstart' ? Math.round(x * 100) + '%' : id === 'stagger' ? String(Math.round(x)) : (+x).toFixed(id === 'k' ? 3 : 2);
