@@ -17,6 +17,12 @@
   const setStatus = (s) => { statusEl.textContent = s; };
   const qs = new URLSearchParams(location.search);
   const calib = qs.get('calib') === '1';            // test hook: disables vignette/sepia grade for pixel diffs
+  // Per-look options from <body data-fx-*> (defaults = the original 'Decay' look).
+  const ds = body.dataset;
+  const hex3 = (h) => { h = (h || '').replace('#', ''); return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16) / 255); };
+  const list3 = (s, d) => (s ? s.split(',').map(Number) : d);
+  const FX = { bg: ds.fxBg || '#15110e', sepia: ds.fxSepia !== undefined ? +ds.fxSepia : 1, vignette: ds.fxVignette !== undefined ? +ds.fxVignette : 1,
+              ghostL: list3(ds.fxGhostLight, [0.78, 0.40, 0.27]), ghostD: list3(ds.fxGhostDark, [0.92, 0.82, 0.70]) };
 
   // ---------- debug panel ----------
   const fmt = (id, v) => (id === 'cols' || id === 'maxlag') ? String(Math.round(v)) : (+v).toFixed(id === 'k' ? 3 : 2);
@@ -70,9 +76,9 @@
   precision highp float; precision highp sampler2DArray;
   in vec2 vUv; out vec4 outColor;
   uniform sampler2DArray uTex;
-  uniform vec2 uRes; uniform float uScroll, uPageH, uChunk, uLayers, uCols, uBlend, uGrad, uShear, uMis, uGrade;
+  uniform vec2 uRes; uniform float uScroll, uPageH, uChunk, uLayers, uCols, uBlend, uGrad, uShear, uMis, uGrade, uSepia, uVig;
+  uniform vec3 uBg, uGhostL, uGhostD;
   uniform float uOff[${MAXC}];
-  const vec3 PAPER = vec3(0.082,0.067,0.055);
   float lagAt(float x, out float seam){
     float c = x / uRes.x * uCols - 0.5; float i0 = floor(c); float f = c - i0;
     int a = int(clamp(i0, 0.0, uCols-1.0)); int b = int(clamp(i0+1.0, 0.0, uCols-1.0));
@@ -82,7 +88,7 @@
     return mix(uOff[a], uOff[b], t);
   }
   vec3 samplePage(float x, float y){
-    if (y < 0.0 || y >= uPageH || x < 0.0 || x >= uRes.x) return PAPER;
+    if (y < 0.0 || y >= uPageH || x < 0.0 || x >= uRes.x) return uBg;
     float layer = min(floor(y / uChunk), uLayers - 1.0);
     return texture(uTex, vec3(x / uRes.x, (y - layer*uChunk) / uChunk, layer)).rgb;
   }
@@ -103,13 +109,13 @@
     if (mot > 0.001) {
       vec3 ghost = samplePage(sx + uMis*2.0*mot, pageY - L*0.10*uMis - uMis*2.0*mot);
       float mw = 0.6 * uMis * mot;
-      col = mix(col, max(col, ghost * vec3(0.78, 0.40, 0.27)), mw);   // light ink ghosts in rust on dark ground
-      col = mix(col, min(col, ghost * vec3(0.92, 0.82, 0.70)), mw * 0.8); // dark ink ghosts in sepia on paper
+      col = mix(col, max(col, ghost * uGhostL), mw);   // light ink ghosts in rust on dark ground
+      col = mix(col, min(col, ghost * uGhostD), mw * 0.8); // dark ink ghosts in sepia on paper
     }
     col *= 1.0 - seam;                                  // torn-strip edge shadow
     // print grade: vignette + slight sepia cast (static; no grain, dust, flicker or scratches)
-    vec2 q = vUv - 0.5; col *= 1.0 - uGrade * 0.66 * dot(q, q);
-    col = mix(col, col * vec3(1.02, 0.98, 0.92), 0.275 * uGrade);
+    vec2 q = vUv - 0.5; col *= 1.0 - uGrade * uVig * 0.66 * dot(q, q);
+    col = mix(col, col * vec3(1.02, 0.98, 0.92), 0.275 * uGrade * uSepia);
     outColor = vec4(col, 1.0);
   }`;
   function sh(type, src) { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s);
@@ -118,7 +124,7 @@
   gl.attachShader(prog, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(prog);
   if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(prog));
   gl.useProgram(prog);
-  const U = {}; ['uTex','uRes','uScroll','uPageH','uChunk','uLayers','uCols','uBlend','uGrad','uShear','uMis','uGrade','uOff'].forEach((n) => U[n] = gl.getUniformLocation(prog, n));
+  const U = {}; ['uTex','uRes','uScroll','uPageH','uChunk','uLayers','uCols','uBlend','uGrad','uShear','uMis','uGrade','uSepia','uVig','uBg','uGhostL','uGhostD','uOff'].forEach((n) => U[n] = gl.getUniformLocation(prog, n));
   gl.bindVertexArray(gl.createVertexArray());
   const MAXTEX = gl.getParameter(gl.MAX_TEXTURE_SIZE);
   let tex = null, snap = null; // snap: {w, h, chunkCss, layers, scale, texW, chunkPx}
@@ -155,7 +161,7 @@
         cp.forEach((el, i) => { el.style.minHeight = '0'; el.style.height = heights[i] + 'px'; });
         Array.from(doc.querySelectorAll('[data-pin-style]')).forEach((el, i) => styles[i].forEach(([p, v]) => el.style.setProperty(p, v)));
       };
-      const base = { scale, backgroundColor: '#15110e', logging: false, useCORS: true, onclone,
+      const base = { scale, backgroundColor: FX.bg, logging: false, useCORS: true, onclone,
         windowWidth: w, windowHeight: window.innerHeight, scrollX: 0, scrollY: -window.scrollY, x: 0, width: w,
         ignoreElements: (el) => el.id === 'panel' || el.id === 'fx' };
       const t = gl.createTexture(); gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D_ARRAY, t);
@@ -166,7 +172,7 @@
         const y0 = L * chunkCss, hh = Math.min(chunkCss, h - y0);
         const c = await html2canvas(page, Object.assign({}, base, { y: y0, height: hh }));
         if (gen !== snapGen) { c.width = c.height = 0; gl.deleteTexture(t); snapping = false; return; }
-        tctx.fillStyle = '#15110e'; tctx.fillRect(0, 0, texW, chunkPx);
+        tctx.fillStyle = FX.bg; tctx.fillRect(0, 0, texW, chunkPx);
         tctx.drawImage(c, 0, 0);
         c.width = c.height = 0; // free canvas memory immediately (iOS has a tight total-canvas budget)
         gl.texSubImage3D(gl.TEXTURE_2D_ARRAY, 0, 0, 0, L, texW, chunkPx, 1, gl.RGBA, gl.UNSIGNED_BYTE, tmp);
@@ -266,7 +272,8 @@
     gl.uniform2f(U.uRes, bw / dpr, bh / dpr); gl.uniform1f(U.uScroll, S); gl.uniform1f(U.uPageH, snap.h);
     gl.uniform1f(U.uChunk, snap.chunkCss); gl.uniform1f(U.uLayers, snap.layers); gl.uniform1f(U.uCols, n);
     gl.uniform1f(U.uBlend, P.blend); gl.uniform1f(U.uGrad, P.grad); gl.uniform1f(U.uShear, P.shear);
-    gl.uniform1f(U.uMis, P.misprint); gl.uniform1f(U.uGrade, calib ? 0 : 1);
+    gl.uniform1f(U.uMis, P.misprint); gl.uniform1f(U.uGrade, calib ? 0 : 1); gl.uniform1f(U.uSepia, FX.sepia); gl.uniform1f(U.uVig, FX.vignette);
+    gl.uniform3fv(U.uBg, hex3(FX.bg)); gl.uniform3fv(U.uGhostL, FX.ghostL); gl.uniform3fv(U.uGhostD, FX.ghostD);
     gl.uniform1i(U.uTex, 0);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
     window.__viscous = { maxLag: maxAbs, settled, ready, snap, H, dpr };

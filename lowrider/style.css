@@ -1,0 +1,66 @@
+:root{--black:#060606;--gold:#d8b25a;--goldlt:#f4e3b0;--golddk:#7a5a1c;--chrome:#d6d6dc;--red:#b3122a;--purple:#5b1a86;--text:#d9d4cc;
+  --lab-bg:rgba(6,6,6,.92);--lab-fg:#e8e2d4;--lab-accent:#d8b25a;--lab-muted:rgba(216,178,90,.3);--lab-font:"Montserrat",sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--black)}
+body{font-family:"Montserrat",Helvetica,sans-serif;font-weight:300;color:var(--text);overflow-x:hidden}
+#page{position:relative;overflow:hidden;background:var(--black)}
+img{display:block}
+h1,h2,h3{font-weight:400}
+
+/* ---------- hero: candy apple over black ---------- */
+.hero{position:relative;min-height:100vh;min-height:100svh;min-height:100lvh;background:var(--black) url(tex/candy-red.jpg) center/cover no-repeat;display:flex;align-items:center;justify-content:center;padding:90px 6vw 120px;overflow:hidden;text-align:center}
+.herotext{position:relative;max-width:1100px;width:100%}
+.pre{font-weight:500;font-size:11px;letter-spacing:.45em;text-transform:uppercase;color:var(--goldlt);margin-bottom:18px}
+.stripe{width:min(720px,92%);height:auto;margin:0 auto;opacity:.95}
+.stripe.flip{transform:scaleY(-1)}
+.title{font-family:"Pirata One",serif;font-size:clamp(84px,17vw,240px);line-height:.95;color:var(--gold);letter-spacing:.02em;
+  text-shadow:0 -1px 0 var(--goldlt),0 2px 0 var(--golddk),0 3px 0 #3d2a08,0 10px 24px rgba(0,0,0,.65)}
+.sub{font-family:"Pinyon Script",cursive;font-size:clamp(30px,4.6vw,58px);color:var(--chrome);margin-top:-4px;text-shadow:0 2px 0 rgba(0,0,0,.6)}
+.mantra{margin-top:26px;font-style:italic;font-size:clamp(15px,1.7vw,20px);letter-spacing:.06em;color:#efe6e6}
+.mantra em{color:var(--goldlt);font-style:italic;font-weight:500}
+.scrollhint{position:absolute;bottom:34px;bottom:calc(30px + 100lvh - 100svh + env(safe-area-inset-bottom));left:0;right:0;font-weight:500;font-size:11px;letter-spacing:.38em;text-transform:uppercase;color:var(--goldlt)}
+.scrollhint i{font-style:normal;color:var(--gold);padding:0 8px;font-size:8px;vertical-align:2px}
+
+/* ---------- section heads with gauge numerals ---------- */
+.sect{display:flex;align-items:center;gap:20px;max-width:1200px;margin:0 auto 26px}
+.gauge{width:84px;height:84px;flex:none}
+.sect h2{font-family:"Pirata One",serif;font-size:clamp(46px,6.5vw,90px);line-height:1;color:var(--gold);text-shadow:0 2px 0 var(--golddk),0 6px 16px rgba(0,0,0,.6);white-space:nowrap}
+.sect .hair{flex:1;height:1px;background:linear-gradient(90deg,var(--gold),rgba(216,178,90,0))}
+
+/* ---------- works ---------- */
+.reel{position:relative;padding:110px 6vw 120px;background:var(--black) url(tex/black-flake.jpg) center/cover no-repeat}
+.lede{max-width:640px;margin:0 0 60px max(calc((100% - 1200px)/2),0px);font-size:16px;line-height:1.7;letter-spacing:.02em;color:#bdb6aa}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:56px 44px;max-width:1200px;margin:0 auto}
+.card{position:relative}
+.bezel{padding:3px;background:linear-gradient(135deg,#fafafa 0%,#8e8e95 22%,#ffffff 46%,#4f4f56 64%,#dcdce2 82%,#77777e 100%)}
+.panel{width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;border:1px solid #000}
+.meta{font-weight:500;font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin:18px 0 4px}
+.card h3{font-family:"Pirata One",serif;font-size:40px;line-height:1;color:#f1ece2}
+.card p:last-child{margin-top:8px;font-size:15px;line-height:1.55;color:#bdb6aa}
+
+/* ---------- shop: candy purple ---------- */
+.shop{position:relative;padding:110px 6vw 100px;background:var(--black) url(tex/candy-purple.jpg) center/cover no-repeat}
+.menu{max-width:1200px;margin:40px auto 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:0 60px}
+.item{display:grid;grid-template-columns:64px 1fr;gap:22px;align-items:start;padding:26px 0;border-top:1px solid rgba(216,178,90,.45)}
+.mini{width:64px;height:64px}
+.item h3{font-family:"Pirata One",serif;font-size:44px;line-height:1;color:var(--gold);text-shadow:0 2px 0 var(--golddk)}
+.item p{margin-top:8px;font-size:15px;line-height:1.6;color:#e2dbe8;max-width:440px}
+.fine{max-width:1200px;margin:50px auto 0;font-weight:500;font-size:11px;letter-spacing:.42em;text-transform:uppercase;color:var(--goldlt)}
+
+/* ---------- contact ---------- */
+.contact{position:relative;min-height:90vh;min-height:90svh;padding:110px 6vw 70px;background:var(--black) url(tex/black-flake.jpg) center bottom/cover no-repeat;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.contact .sect{width:100%;max-width:1200px}
+.contact .big{font-family:"Pirata One",serif;font-size:clamp(56px,9vw,130px);line-height:1;margin-top:40px;color:#f1ece2;text-shadow:0 3px 0 #2a0a10,0 10px 30px rgba(179,18,42,.35)}
+.send{font-size:17px;margin-top:16px;color:#bdb6aa}
+.plate{margin-top:42px;padding:3px;background:linear-gradient(135deg,#fafafa 0%,#8e8e95 22%,#ffffff 46%,#4f4f56 64%,#dcdce2 82%,#77777e 100%)}
+.mail{display:block;background:#0b0b0c;padding:18px 34px;font-weight:500;font-size:clamp(18px,2.6vw,30px);letter-spacing:.18em;text-transform:uppercase;color:var(--gold);text-decoration:none}
+.contact .stripe{margin-top:56px;width:min(560px,90%)}
+.thatsall{margin-top:26px;font-weight:500;letter-spacing:.42em;text-transform:uppercase;font-size:10px;color:#7d776d}
+
+@media (max-width:640px){
+  .scrollhint{font-size:9px;letter-spacing:.2em;padding:0 16px;bottom:70px;bottom:calc(66px + 100lvh - 100svh + env(safe-area-inset-bottom))}
+  .gauge{width:58px;height:58px}.sect{gap:12px}.sect h2{font-size:40px;white-space:normal}
+  .menu{grid-template-columns:1fr}.lede{font-size:15px}
+  .mail{padding:16px 18px;letter-spacing:.1em}
+  .pre{font-size:9px;letter-spacing:.3em}
+}

@@ -1,0 +1,80 @@
+:root{--paper:#ebe7dc;--ink:#141414;--orange:#ff4f1a;--grey:#8a8780;
+  --lab-bg:#141414;--lab-fg:#ebe7dc;--lab-accent:#ff4f1a;--lab-muted:rgba(235,231,220,.25);--lab-font:"Archivo Narrow",sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--ink)}
+body{font-family:"Archivo Narrow","Arial Narrow",sans-serif;color:var(--ink);overflow-x:hidden}
+#page{position:relative;overflow:hidden;background:var(--paper)}
+img{display:block}
+h1,h2,h3{font-weight:400}
+
+/* ---------- hero: paper flyer ---------- */
+.hero{position:relative;min-height:100vh;min-height:100svh;min-height:100lvh;background:var(--paper) url(tex/paper.jpg) center/cover no-repeat;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:90px 5vw 120px;overflow:hidden;text-align:center}
+.halfband{position:absolute;left:0;bottom:0;width:100%;height:38%;opacity:.9}
+.flyer-top{position:absolute;top:9%;left:5vw;right:5vw;display:flex;justify-content:space-between;font-family:"Courier Prime",monospace;font-weight:700;font-size:13px;letter-spacing:.14em;text-transform:uppercase}
+.flyer-top span:last-child{background:var(--ink);color:var(--paper);padding:3px 8px}
+.ransom{position:relative;display:flex;flex-wrap:wrap;justify-content:center;gap:clamp(4px,.8vw,10px);line-height:1}
+.ransom .l{display:inline-block;font-size:clamp(52px,12vw,170px);padding:.06em .12em .02em;line-height:1}
+.l1{font-family:"Anton",sans-serif;background:var(--ink);color:var(--paper);transform:rotate(-4deg)}
+.l2{font-family:"Abril Fatface",serif;background:#fff;border:1px solid #999;transform:rotate(3deg) translateY(6px)}
+.l3{font-family:"Courier Prime",monospace;font-weight:700;background:var(--orange);color:var(--ink);transform:rotate(-2deg) translateY(-4px)}
+.l4{font-family:"Archivo Black",sans-serif;background:var(--paper);border:2px solid var(--ink);transform:rotate(5deg)}
+.l5{font-family:"Playfair Display",serif;font-style:italic;font-weight:900;background:var(--ink);color:var(--orange);transform:rotate(-3deg) translateY(8px)}
+.l6{font-family:"Anton",sans-serif;background:#d8d3c4;transform:rotate(2deg) translateY(-6px)}
+.l7{font-family:"Abril Fatface",serif;background:var(--ink);color:var(--paper);transform:rotate(-5deg)}
+.l8{font-family:"Archivo Black",sans-serif;background:#fff;color:var(--orange);border:1px solid #aaa;transform:rotate(3deg) translateY(4px)}
+.sub{position:relative;margin-top:30px}
+.sub span{display:inline-block;font-family:"Anton",sans-serif;font-size:clamp(20px,3vw,34px);letter-spacing:.14em;text-transform:uppercase;background:var(--ink);color:var(--paper);padding:6px 18px 4px;transform:rotate(-1deg)}
+.slip{position:relative;background:#f7f4ec;border:1px solid rgba(20,20,20,.35);box-shadow:3px 3px 0 rgba(20,20,20,.18)}
+.mantra-slip{margin-top:34px;padding:16px 22px;transform:rotate(1.2deg);max-width:560px}
+.mantra{font-family:"Courier Prime",monospace;font-size:clamp(16px,2vw,21px);line-height:1.4}
+.mantra b{color:var(--orange);font-weight:700}
+.tape{position:absolute;width:120px;height:auto;pointer-events:none}
+.t-a{top:-18px;left:50%;margin-left:-60px;transform:rotate(-3deg)}
+.t-b{top:-20px;left:-24px;transform:rotate(-24deg)}
+.t-c{top:-16px;right:-22px;transform:rotate(18deg);width:110px}
+.scrollhint{position:absolute;bottom:34px;bottom:calc(30px + 100lvh - 100svh + env(safe-area-inset-bottom));left:0;right:0;font-family:"Archivo Narrow",sans-serif;font-weight:600;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--paper)}
+.scrollhint i{font-style:normal;color:var(--orange);padding:0 6px}
+
+/* ---------- section heads ---------- */
+.sect{display:flex;align-items:flex-end;gap:16px;max-width:1200px;margin:0 auto 28px;border-bottom:3px solid currentColor;padding-bottom:10px}
+.sect .no{font-family:"Courier Prime",monospace;font-weight:700;font-size:15px;background:var(--orange);color:var(--ink);padding:4px 8px;margin-bottom:10px}
+.sect h2{font-family:"Anton",sans-serif;font-size:clamp(52px,9vw,128px);line-height:.9;text-transform:uppercase;letter-spacing:.01em}
+
+/* ---------- works: black toner page with paper slips ---------- */
+.reel{position:relative;padding:110px 5vw 120px;background:var(--ink) url(tex/black.jpg) center/cover no-repeat;color:var(--paper)}
+.lede{max-width:1200px;margin:0 auto 60px;font-family:"Courier Prime",monospace;font-size:17px;line-height:1.55;max-width:640px;margin-left:max(calc((100% - 1200px)/2),0px)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:60px 46px;max-width:1200px;margin:0 auto}
+.card{position:relative;background:#f4f1e8;color:var(--ink);padding:14px 14px 18px;border:1px solid #000}
+.card:nth-child(4n+1){transform:rotate(-1.4deg)}.card:nth-child(4n+2){transform:rotate(1deg)}.card:nth-child(4n+3){transform:rotate(-.6deg)}.card:nth-child(4n){transform:rotate(1.6deg)}
+.photo{width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;border:1px solid #000}
+.staple{position:absolute;top:-6px;left:50%;margin-left:-45px;width:90px;height:auto;z-index:2}
+.meta{font-family:"Courier Prime",monospace;font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin:14px 0 2px;color:#444}
+.card h3{font-family:"Anton",sans-serif;font-size:38px;line-height:1;text-transform:uppercase}
+.card p:last-child{margin-top:6px;font-size:16px;line-height:1.4}
+
+/* ---------- shop: paper lineup ---------- */
+.shop{position:relative;padding:110px 5vw 100px;background:var(--paper) url(tex/paper.jpg) center/cover no-repeat}
+.menu{list-style:none;max-width:1200px;margin:30px auto 0}
+.item{display:grid;grid-template-columns:120px 1fr;gap:24px;align-items:start;padding:22px 0;border-bottom:1px solid var(--ink)}
+.item .num{font-family:"Anton",sans-serif;font-size:30px;color:var(--orange);line-height:1;padding-top:8px}
+.item h3{font-family:"Anton",sans-serif;font-size:clamp(44px,7vw,92px);line-height:.92;text-transform:uppercase}
+.item p{font-family:"Courier Prime",monospace;font-size:17px;line-height:1.45;margin-top:8px;max-width:620px}
+.fine{max-width:1200px;margin:40px auto 0;font-family:"Archivo Narrow",sans-serif;font-weight:600;font-size:13px;letter-spacing:.35em;text-transform:uppercase}
+
+/* ---------- contact ---------- */
+.contact{position:relative;min-height:90vh;min-height:90svh;padding:110px 5vw 80px;background:var(--ink) url(tex/black.jpg) center bottom/cover no-repeat;color:var(--paper);display:flex;flex-direction:column;justify-content:center}
+.contact .sect{width:100%}
+.contact .big{font-family:"Anton",sans-serif;font-size:clamp(60px,12vw,170px);line-height:.9;text-transform:uppercase;margin-top:40px;text-align:center}
+.contact .big em{font-style:normal;color:var(--orange)}
+.send{text-align:center;font-family:"Courier Prime",monospace;font-size:18px;margin-top:18px}
+.mail-slip{align-self:center;margin-top:44px;padding:16px 28px;transform:rotate(-1.5deg)}
+.mail{font-family:"Courier Prime",monospace;font-weight:700;font-size:clamp(24px,4vw,46px);color:var(--ink);text-decoration:none;border-bottom:3px solid var(--orange)}
+.thatsall{text-align:center;margin-top:80px;font-family:"Archivo Narrow",sans-serif;font-weight:600;letter-spacing:.4em;text-transform:uppercase;font-size:12px;color:var(--grey)}
+
+@media (max-width:640px){
+  .ransom{gap:3px;flex-wrap:nowrap}.ransom .l{font-size:9.4vw;padding:.06em .1em .02em}
+  .flyer-top{font-size:10px;top:calc(64px + env(safe-area-inset-top))}
+  .scrollhint{font-size:10px;letter-spacing:.16em;padding:0 16px;bottom:70px;bottom:calc(66px + 100lvh - 100svh + env(safe-area-inset-bottom))}
+  .item{grid-template-columns:1fr;gap:4px}.item .num{font-size:22px}
+  .lede{font-size:15px}
+}

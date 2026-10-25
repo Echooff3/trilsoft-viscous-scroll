@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TRILSOFT — boutique code shop (Lowrider look)</title>
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&family=Pinyon+Script&family=Montserrat:ital,wght@0,300;0,500;1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../lab.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-fx-bg="#050505" data-fx-sepia="0" data-fx-vignette="0.9" data-fx-ghost-light="0.92,0.72,0.32" data-fx-ghost-dark="0.82,0.55,0.6">
+<main id="page">
+  <header class="hero" data-pin-height>
+    <div class="herotext">
+      <p class="pre">Custom software · hand-laid in Chicago</p>
+      <img class="stripe" src="tex/pinstripe.svg" alt="">
+      <h1 class="title">Trilsoft</h1>
+      <p class="sub">boutique code shop</p>
+      <img class="stripe flip" src="tex/pinstripe.svg" alt="">
+      <p class="mantra">“nothing is impossible, <em>improbable maybe.</em>”</p>
+    </div>
+    <p class="scrollhint" data-pin-style="bottom">scroll slow <i>◆</i> scroll fast <i>◆</i> let it settle</p>
+  </header>
+
+  <section class="reel">
+    <div class="sect"><img class="gauge" src="tex/gauge-1.svg" alt=""><h2>Now Showing</h2><span class="hair"></span></div>
+    <p class="lede">A few pieces from the back room. Every one gets its own page, its own trick, its own weather.</p>
+    <div class="grid">
+      <article class="card"><div class="bezel"><img class="panel" src="tex/panel-harbor.jpg" alt=""></div><p class="meta">01 — iOS · Android</p><h3>Harbor</h3><p>Family hub. Chores, check-ins, calm waters.</p></article>
+      <article class="card"><div class="bezel"><img class="panel" src="tex/panel-kooledit.jpg" alt=""></div><p class="meta">02 — iOS</p><h3>Kool Edit</h3><p>Pocket audio editor with attitude.</p></article>
+      <article class="card"><div class="bezel"><img class="panel" src="tex/panel-wildcard.jpg" alt=""></div><p class="meta">03 — VST3 · AU · CLAP</p><h3>Wild Card</h3><p>Chaos generator for your DAW.</p></article>
+      <article class="card"><div class="bezel"><img class="panel" src="tex/panel-cns.jpg" alt=""></div><p class="meta">04 — VST3 · AU · CLAP</p><h3>Conceal-N-Strike</h3><p>Hide the hit, land the hit.</p></article>
+      <article class="card"><div class="bezel"><img class="panel" src="tex/panel-fart.jpg" alt=""></div><p class="meta">05 — VST3 · M4L</p><h3>MIDI Fart Sniffer</h3><p>Rip it. Hold it. Ship it.</p></article>
+      <article class="card"><div class="bezel"><img class="panel" src="tex/panel-bruno.jpg" alt=""></div><p class="meta">06 — VST3 · AU · CLAP · M4L</p><h3>Bruno</h3><p>An auto-drummer that never shows up late.</p></article>
+    </div>
+  </section>
+
+  <section class="shop">
+    <div class="sect"><img class="gauge" src="tex/gauge-2.svg" alt=""><h2>The Shop</h2><span class="hair"></span></div>
+    <div class="menu">
+      <div class="item"><img class="mini" src="tex/gauge-1.svg" alt=""><div><h3>MVPs</h3><p>From napkin to working thing people can tap. Fast, honest, shippable.</p></div></div>
+      <div class="item"><img class="mini" src="tex/gauge-2.svg" alt=""><div><h3>Launch Pages</h3><p>One page, one job: make them lean in and sign up.</p></div></div>
+      <div class="item"><img class="mini" src="tex/gauge-3.svg" alt=""><div><h3>Micro-sites</h3><p>Small worlds for big ideas. Weird encouraged.</p></div></div>
+      <div class="item"><img class="mini" src="tex/gauge-4.svg" alt=""><div><h3>Proofs of Concept</h3><p>“Can it even be done?” We find out before you bet the farm.</p></div></div>
+    </div>
+    <p class="fine">hand-built · small batch · no templates</p>
+  </section>
+
+  <footer class="contact" data-pin-height>
+    <div class="sect"><img class="gauge" src="tex/gauge-3.svg" alt=""><h2>Correspondence</h2><span class="hair"></span></div>
+    <h2 class="big">Got a crazy one?</h2>
+    <p class="send">Send it over. Improbable is our favorite flavor.</p>
+    <div class="plate"><a class="mail" href="mailto:help@trilsoft.com">help@trilsoft.com</a></div>
+    <img class="stripe" src="tex/pinstripe.svg" alt="">
+    <p class="thatsall">that’s all, folks … for now.</p>
+  </footer>
+</main>
+
+<nav class="looks" aria-label="Look"><span>look:</span><a href="../">Decay</a><a href="../xerox/">Xerox</a><a href="./" aria-current="page">Lowrider</a></nav>
+
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<div id="panel" data-html2canvas-ignore>
+  <div class="ph"><b>viscosity lab</b><button id="collapse" title="show / hide" aria-expanded="true">–</button></div>
+  <div class="pb">
+    <label><input type="checkbox" autocomplete="off" id="on" checked> effect on</label>
+    <label><input type="checkbox" autocomplete="off" id="poke" checked> mouse pokes the goo</label>
+    <label><input type="checkbox" autocomplete="off" id="peek"> peek at real DOM</label>
+    <div class="row"><span>viscosity (damping)</span><input type="range" autocomplete="off" id="damp" min="0.02" max="0.6" step="0.01"><output></output></div>
+    <div class="row"><span>stiffness</span><input type="range" autocomplete="off" id="k" min="0.005" max="0.3" step="0.005"><output></output></div>
+    <div class="row"><span>strip count</span><input type="range" autocomplete="off" id="cols" min="2" max="96" step="1"><output></output></div>
+    <div class="row"><span>strip coupling</span><input type="range" autocomplete="off" id="couple" min="0" max="0.45" step="0.01"><output></output></div>
+    <div class="row"><span>strip desync</span><input type="range" autocomplete="off" id="desync" min="0" max="1" step="0.01"><output></output></div>
+    <div class="row"><span>edge: hard ↔ gooey</span><input type="range" autocomplete="off" id="blend" min="0" max="1" step="0.01"><output></output></div>
+    <div class="row"><span>flow gradient</span><input type="range" autocomplete="off" id="grad" min="0" max="1" step="0.01"><output></output></div>
+    <div class="row"><span>max lag (px)</span><input type="range" autocomplete="off" id="maxlag" min="20" max="900" step="10"><output></output></div>
+    <div class="row"><span>shear</span><input type="range" autocomplete="off" id="shear" min="0" max="1" step="0.01"><output></output></div>
+    <div class="row"><span>ink misprint</span><input type="range" autocomplete="off" id="misprint" min="0" max="1" step="0.01"><output></output></div>
+    <div class="btns"><button id="reset">defaults</button><button id="resnap">re-snapshot</button></div>
+    <div id="status">booting…</div>
+  </div>
+</div>
+
+<script src="../html2canvas-pro.min.js"></script>
+<script src="../viscous.js"></script>
+</body>
+</html>
