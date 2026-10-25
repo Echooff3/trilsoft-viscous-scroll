@@ -19,3 +19,8 @@ Three treatments share `viscous.js`, `html2canvas-pro.min.js` and the effect def
 - `/xerox/` **Xerox** – photocopy punk flyer (`tools/gen_xerox.py`). Uses `lab.css` for the panel/switcher.
 - `/lowrider/` **Lowrider** – candy paint, gold pinstripes, gauge numerals (`tools/gen_lowrider.py`).
 All textures and SVGs are procedural (numpy + Pillow); no source artwork.
+
+## Snap (`/snap/`)
+Full-screen sections in a handmade craft world (cardboard, felt, burlap, denim, wood blocks, stickers, string, buttons; all textures procedural via `tools/gen_snap.py`).
+No WebGL and no snapshots, just plain DOM. A hand-rolled spring (`snap/snap.js`, a = -k·(x - target) - d·v at fixed 60 Hz steps) moves the deck. It gets extra damping ("end friction") after a set % of the travel, a velocity kick when it crosses the target (overshoot), and a free wobble, then snaps exactly to rest.
+Cut-outs stagger in and jiggle on their own springs. Input: wheel/trackpad (one flick = one section), touch drag with rubber-banding, arrows/PgUp/PgDn/space/Home/End, dot nav, `#hash` deep links. `prefers-reduced-motion` gives an instant switch (`?force=1` overrides).

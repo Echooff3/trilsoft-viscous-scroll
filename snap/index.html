@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Trilsoft · Snap</title>
+<meta name="description" content="Trilsoft: boutique code shop. Snap look: full-screen spring transitions in a handmade craft world.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Luckiest+Guy&family=Permanent+Marker&display=swap" rel="stylesheet">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- wobbly scissor-cut edge for paper cut-outs -->
+    <filter id="cut" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="5"/></filter>
+  </defs>
+</svg>
+
+<nav class="looks" aria-label="Look"><span>look:</span><a href="../">Decay</a><a href="../xerox/">Xerox</a><a href="../lowrider/">Lowrider</a><a href="./" aria-current="page">Snap</a></nav>
+
+<nav id="dots" aria-label="Sections">
+  <button aria-label="Home"></button><button aria-label="Mantra"></button><button aria-label="Now Showing"></button><button aria-label="Now Showing, part two"></button><button aria-label="The Shop"></button><button aria-label="Contact"></button>
+</nav>
+
+<div id="viewport">
+<main id="deck">
+
+  <!-- 1 · HERO -->
+  <section class="scene s-home" id="home" aria-label="Trilsoft">
+    <div class="bg bg-cardboard" data-depth="0.15"></div>
+    <div class="layer clouds" data-depth="0.6" aria-hidden="true">
+      <i class="cloud c1" data-jiggle></i><i class="cloud c2" data-jiggle></i><i class="cloud c3" data-jiggle></i>
+      <i class="sun" data-jiggle><b></b></i>
+    </div>
+    <div class="layer hills" data-depth="0.35" aria-hidden="true"><i class="hill h1"></i><i class="hill h2"></i><i class="hill h3"></i></div>
+    <div class="stage">
+      <div class="inner">
+        <h1 class="blocks" aria-label="TRILSOFT">
+          <span data-stagger><b data-jiggle style="--r:-4deg;--c:var(--tomato)">T</b></span><span data-stagger><b data-jiggle style="--r:3deg;--c:var(--mustard)">R</b></span><span data-stagger><b data-jiggle style="--r:-2deg;--c:var(--teal)">I</b></span><span data-stagger><b data-jiggle style="--r:5deg;--c:var(--cream)">L</b></span><span data-stagger><b data-jiggle style="--r:-3deg;--c:var(--tomato)">S</b></span><span data-stagger><b data-jiggle style="--r:2deg;--c:var(--mustard)">O</b></span><span data-stagger><b data-jiggle style="--r:-5deg;--c:var(--teal)">F</b></span><span data-stagger><b data-jiggle style="--r:3deg;--c:var(--cream)">T</b></span>
+        </h1>
+        <p class="banner felt teal stitched" data-stagger><span>boutique code shop</span></p>
+        <p class="sticker peel s-made" data-stagger data-jiggle>made by hand<br><em>est. improbable</em></p>
+      </div>
+      <p class="hint marker" data-stagger>scroll · swipe · arrow keys <span class="arrow">↓</span></p>
+    </div>
+  </section>
+
+  <!-- 2 · MANTRA -->
+  <section class="scene s-mantra" id="mantra" aria-label="Mantra">
+    <div class="bg bg-felt-mustard" data-depth="0.15"></div>
+    <div class="layer" data-depth="0.5" aria-hidden="true"><i class="string s-a"></i><i class="btn b1" data-jiggle></i><i class="btn b2" data-jiggle></i><i class="btn b3" data-jiggle></i></div>
+    <div class="stage">
+      <div class="inner">
+        <div class="patch felt cream stitched big" data-stagger data-jiggle style="--r:-1.5deg">
+          <p class="kicker marker">our whole deal</p>
+          <h2 class="mantra">nothing is impossible,</h2>
+          <p class="mantra-2"><span class="sticker peel tomato" data-jiggle>improbable maybe.</span></p>
+        </div>
+        <p class="note paper" data-stagger style="--r:2deg">We build small, strange, useful software. Apps, plug-ins and the odd thing nobody asked for until they had it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · NOW SHOWING (1/2) -->
+  <section class="scene s-works" id="works" aria-label="Now Showing">
+    <div class="bg bg-cork" data-depth="0.15"></div>
+    <div class="stage">
+      <div class="inner">
+        <div class="tag-wrap" data-stagger><i class="string hang"></i><h2 class="tag" data-jiggle>Now Showing <small>1 / 2</small></h2></div>
+        <div class="cards">
+          <article class="card paper" data-stagger style="--r:-2deg"><i class="pin" style="--c:var(--tomato)"></i>
+            <div class="icon felt teal" data-jiggle><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="#fff6e4" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="13" r="5"/><path d="M32 18v34M22 27h20M12 38c2 9 10 14 20 14s18-5 20-14"/><path d="M8 40l4-4 4 4M48 40l4-4 4 4"/></g></svg></div>
+            <h3>Harbor</h3><p class="meta">iOS · Android</p><p>Family hub. Chores, check-ins, calm waters.</p></article>
+          <article class="card paper" data-stagger style="--r:1.5deg"><i class="pin" style="--c:var(--teal)"></i>
+            <div class="icon felt tomato" data-jiggle><svg viewBox="0 0 64 64" aria-hidden="true"><path fill="none" stroke="#fff6e4" stroke-width="5" stroke-linecap="round" d="M6 32h6M16 22v20M24 12v40M32 24v16M40 8v48M48 18v28M56 28v8"/></svg></div>
+            <h3>Kool Edit</h3><p class="meta">iOS</p><p>Pocket audio editor with attitude.</p></article>
+          <article class="card paper" data-stagger style="--r:-1deg"><i class="pin" style="--c:var(--mustard)"></i>
+            <div class="icon felt mustard" data-jiggle><svg viewBox="0 0 64 64" aria-hidden="true"><g stroke="#3b2a1c" stroke-width="4" stroke-linejoin="round"><rect x="14" y="8" width="30" height="42" rx="4" fill="#fff6e4" transform="rotate(-12 29 29)"/><rect x="22" y="12" width="30" height="42" rx="4" fill="#fff6e4" transform="rotate(10 37 33)"/></g><path d="M37 26l3 6 6 1-4 4 1 6-6-3-6 3 1-6-4-4 6-1z" fill="#e2503b" transform="rotate(10 37 33)"/></svg></div>
+            <h3>Wild Card</h3><p class="meta">VST3 · AU · CLAP</p><p>Chaos generator for your DAW.</p></article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · NOW SHOWING (2/2) -->
+  <section class="scene s-works s-works-2" id="works-2" aria-label="Now Showing, continued">
+    <div class="bg bg-cork" data-depth="0.15"></div>
+    <div class="stage">
+      <div class="inner">
+        <div class="tag-wrap" data-stagger><i class="string hang"></i><h2 class="tag" data-jiggle>Now Showing <small>2 / 2</small></h2></div>
+        <div class="cards">
+          <article class="card paper" data-stagger style="--r:1.5deg"><i class="pin" style="--c:var(--mustard)"></i>
+            <div class="icon felt cream" data-jiggle><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="#e2503b" stroke-width="5"><circle cx="32" cy="32" r="22"/><circle cx="32" cy="32" r="11"/></g><circle cx="32" cy="32" r="4" fill="#e2503b"/><path d="M50 10L34 30" stroke="#3b2a1c" stroke-width="4" stroke-linecap="round"/><path d="M48 6l8 2-2 8z" fill="#2a8a86"/></svg></div>
+            <h3>Conceal-N-Strike</h3><p class="meta">VST3 · AU · CLAP</p><p>Hide the hit, land the hit.</p></article>
+          <article class="card paper" data-stagger style="--r:-2deg"><i class="pin" style="--c:var(--tomato)"></i>
+            <div class="icon felt mustard" data-jiggle><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="#fff6e4" stroke="#3b2a1c" stroke-width="3.5"><circle cx="22" cy="40" r="11"/><circle cx="36" cy="30" r="13"/><circle cx="46" cy="42" r="9"/></g><path d="M20 20c0-6 6-6 6-12M44 14c0-5 5-5 5-10" fill="none" stroke="#2a8a86" stroke-width="4" stroke-linecap="round"/><circle cx="30" cy="41" r="3" fill="#3b2a1c"/><circle cx="40" cy="38" r="3" fill="#3b2a1c"/></svg></div>
+            <h3>MIDI Fart Sniffer</h3><p class="meta">VST3 · M4L</p><p>Rip it. Hold it. Ship it.</p></article>
+          <article class="card paper" data-stagger style="--r:2deg"><i class="pin" style="--c:var(--teal)"></i>
+            <div class="icon felt teal" data-jiggle><svg viewBox="0 0 64 64" aria-hidden="true"><g stroke="#3b2a1c" stroke-width="3.5" stroke-linejoin="round"><path d="M12 24v20c0 6 9 10 20 10s20-4 20-10V24" fill="#e2503b"/><ellipse cx="32" cy="24" rx="20" ry="9" fill="#fff6e4"/></g><path d="M16 36l8 10 8-10 8 10 8-10" fill="none" stroke="#f2b632" stroke-width="3.5"/><path d="M22 6l10 16M50 4L36 20" stroke="#c89a62" stroke-width="5" stroke-linecap="round"/></svg></div>
+            <h3>Bruno</h3><p class="meta">VST3 · AU · CLAP · M4L</p><p>An auto-drummer that never shows up late.</p></article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · THE SHOP -->
+  <section class="scene s-shop" id="shop" aria-label="The Shop">
+    <div class="bg bg-denim" data-depth="0.15"></div>
+    <div class="stage">
+      <div class="inner">
+        <h2 class="shop-title" data-stagger><span class="board wood" data-jiggle>The Shop</span></h2>
+        <div class="patches">
+          <div class="patch felt tomato stitched" data-stagger style="--r:-1.5deg"><span class="num sticker" data-jiggle>01</span><h3>MVPs</h3><p>From napkin to working thing people can tap. Fast, honest, shippable.</p></div>
+          <div class="patch felt mustard stitched" data-stagger style="--r:1deg"><span class="num sticker" data-jiggle>02</span><h3>Launch Pages</h3><p>One page, one job: make them lean in and sign up.</p></div>
+          <div class="patch felt teal stitched" data-stagger style="--r:1.5deg"><span class="num sticker" data-jiggle>03</span><h3>Micro-sites</h3><p>Small worlds for big ideas. Weird encouraged.</p></div>
+          <div class="patch felt cream stitched" data-stagger style="--r:-1deg"><span class="num sticker" data-jiggle>04</span><h3>Proofs of Concept</h3><p>“Can it even be done?” We find out before you bet the farm.</p></div>
+        </div>
+        <p class="fine marker" data-stagger>hand-built · small batch · no templates</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · CONTACT -->
+  <section class="scene s-contact" id="contact" aria-label="Contact">
+    <div class="bg bg-burlap" data-depth="0.15"></div>
+    <div class="layer" data-depth="0.5" aria-hidden="true"><i class="string s-b"></i><i class="btn b4" data-jiggle></i><i class="btn b5" data-jiggle></i></div>
+    <div class="stage">
+      <div class="inner">
+        <div class="patch felt tomato stitched big" data-stagger data-jiggle style="--r:1deg">
+          <h2 class="ask">Got a crazy one?</h2>
+          <p class="ask-2">Send it over. Improbable is our favorite flavor.</p>
+          <a class="mail board wood" href="mailto:help@trilsoft.com" data-jiggle>help@trilsoft.com</a>
+        </div>
+        <p class="sticker peel s-bye" data-stagger data-jiggle>that’s all, folks … for now.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+</div>
+
+<aside id="tune" class="collapsed" aria-label="Motion tuning">
+  <button id="t-toggle" aria-expanded="false" aria-controls="t-body">tune</button>
+  <div id="t-body">
+    <label>stiffness <input id="t-k" type="range" min="0.02" max="0.3" step="0.005"><output></output></label>
+    <label>damping <input id="t-damp" type="range" min="0.02" max="0.6" step="0.01"><output></output></label>
+    <label>end friction <input id="t-friction" type="range" min="0" max="1.5" step="0.01"><output></output></label>
+    <label>friction start <input id="t-fstart" type="range" min="0.2" max="0.95" step="0.01"><output></output></label>
+    <label>overshoot <input id="t-overshoot" type="range" min="0" max="3" step="0.05"><output></output></label>
+    <label>stagger <input id="t-stagger" type="range" min="0" max="12" step="1"><output></output></label>
+    <div class="t-btns"><button id="t-defaults">defaults</button><button id="t-copy">copy settings</button><button id="t-replay">next ↓</button></div>
+    <p id="t-msg" aria-live="polite"></p>
+    <textarea id="t-text" hidden rows="3" readonly></textarea>
+  </div>
+</aside>
+
+<script src="snap.js"></script>
+</body>
+</html>
