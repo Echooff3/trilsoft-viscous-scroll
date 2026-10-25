@@ -8,7 +8,7 @@
   'use strict';
   const MAXC = 96;
   const DEFAULTS = { damp: 0.42, k: 0.045, cols: 32, couple: 0.18, desync: 1.0, blend: 0.84,
-                     grad: 0.6, maxlag: 420, shear: 0.84, misprint: 1.0, grain: 0.55 };
+                     grad: 0.6, maxlag: 420, shear: 0.84, misprint: 1.0 };
   const P = Object.assign({}, DEFAULTS);
   const $ = (id) => document.getElementById(id);
   const body = document.body, page = $('page'), cv = $('fx'), statusEl = $('status');
@@ -54,7 +54,7 @@
   precision highp float; precision highp sampler2DArray;
   in vec2 vUv; out vec4 outColor;
   uniform sampler2DArray uTex;
-  uniform vec2 uRes; uniform float uScroll, uPageH, uChunk, uLayers, uCols, uBlend, uGrad, uShear, uMis, uGrain, uTime;
+  uniform vec2 uRes; uniform float uScroll, uPageH, uChunk, uLayers, uCols, uBlend, uGrad, uShear, uMis, uTime;
   uniform float uOff[${MAXC}];
   const vec3 PAPER = vec3(0.082,0.067,0.055);
   float lagAt(float x, out float seam){
@@ -90,20 +90,14 @@
     col = mix(col, max(col, rustG), mw);
     col = mix(col, min(col, sepG), mw * 0.8);
     col *= 1.0 - seam;                                  // torn-strip edge shadow
-    // weathered print: grain, dust, scratches, flicker, heavy vignette
-    float lum = dot(col, vec3(0.299, 0.587, 0.114));
-    float g = hash(floor(px) + fract(uTime*7.0)*91.0) - 0.5;
-    col += g * (0.05 + 0.06 * (1.0 - lum)) * uGrain;
-    float dust = step(0.9993, hash(floor(px / 2.0) + floor(uTime*10.0)*13.7));
-    col = mix(col, vec3(0.84, 0.8, 0.72), dust * 0.5 * uGrain);
+    // weathered print: film scratches, heavy vignette, sepia cast (fixed strength)
     float fr = floor(uTime*8.0);
     if (hash(vec2(fr, 3.0)) > 0.55) { float lx = hash(vec2(fr, 9.0)) * uRes.x;
       float sl = exp(-abs(px.x - lx) * 1.2) * smoothstep(0.0, 0.3, hash(vec2(floor(px.y/40.0), fr)));
-      col = mix(col, vec3(0.8, 0.76, 0.68), sl * 0.22 * uGrain); }
-    if (hash(vec2(fr, 5.0)) > 0.75) { float lx2 = hash(vec2(fr, 11.0)) * uRes.x; col *= 1.0 - 0.25 * uGrain * exp(-abs(px.x - lx2)); }
-    col *= 1.0 + (hash(vec2(fr, 1.0)) - 0.5) * 0.035 * uGrain;
-    vec2 q = vUv - 0.5; col *= 1.0 - uGrain * 0.75 * dot(q, q) * 1.6;
-    col = mix(col, col * vec3(1.02, 0.98, 0.92), 0.5 * uGrain);   // sepia cast
+      col = mix(col, vec3(0.8, 0.76, 0.68), sl * 0.121); }
+    if (hash(vec2(fr, 5.0)) > 0.75) { float lx2 = hash(vec2(fr, 11.0)) * uRes.x; col *= 1.0 - 0.1375 * exp(-abs(px.x - lx2)); }
+    vec2 q = vUv - 0.5; col *= 1.0 - 0.66 * dot(q, q);
+    col = mix(col, col * vec3(1.02, 0.98, 0.92), 0.275);   // sepia cast
     outColor = vec4(col, 1.0);
   }`;
   function sh(type, src) { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s);
@@ -112,7 +106,7 @@
   gl.attachShader(prog, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(prog);
   if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(prog));
   gl.useProgram(prog);
-  const U = {}; ['uTex','uRes','uScroll','uPageH','uChunk','uLayers','uCols','uBlend','uGrad','uShear','uMis','uGrain','uTime','uOff'].forEach((n) => U[n] = gl.getUniformLocation(prog, n));
+  const U = {}; ['uTex','uRes','uScroll','uPageH','uChunk','uLayers','uCols','uBlend','uGrad','uShear','uMis','uTime','uOff'].forEach((n) => U[n] = gl.getUniformLocation(prog, n));
   gl.bindVertexArray(gl.createVertexArray());
   const MAXTEX = gl.getParameter(gl.MAX_TEXTURE_SIZE);
   let tex = null, snap = null; // snap: {w, h, chunkCss, layers, scale}
@@ -210,7 +204,7 @@
     gl.uniform2f(U.uRes, W, H); gl.uniform1f(U.uScroll, S); gl.uniform1f(U.uPageH, snap.h);
     gl.uniform1f(U.uChunk, snap.chunkCss); gl.uniform1f(U.uLayers, snap.layers); gl.uniform1f(U.uCols, n);
     gl.uniform1f(U.uBlend, P.blend); gl.uniform1f(U.uGrad, P.grad); gl.uniform1f(U.uShear, P.shear);
-    gl.uniform1f(U.uMis, P.misprint); gl.uniform1f(U.uGrain, P.grain); gl.uniform1f(U.uTime, now / 1000);
+    gl.uniform1f(U.uMis, P.misprint); gl.uniform1f(U.uTime, now / 1000);
     gl.uniform1i(U.uTex, 0);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
     window.__viscous = { maxLag: maxAbs, ready, snap };
